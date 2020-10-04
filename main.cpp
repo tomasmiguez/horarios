@@ -9,6 +9,7 @@
 #include <algorithm>//find
 #include <chrono>
 
+
 using namespace std;
 
 static mt19937 GEN(chrono::steady_clock::now().time_since_epoch().count());
@@ -172,13 +173,18 @@ Horario simAnnealing(Horario h, double T0, unsigned long long k) {
 
 int main()
 {
+    auto start = std::chrono::system_clock::now();
+
     GEN.discard(1000);
 
-    Horario test("test2.in");
+    Horario test("test3.in");
 
-    test = simAnnealing(test, 1000, 100000);
+    test = simAnnealing(test, 100, 100000);
 
     test.printHorario();
 
+    auto end = std::chrono::system_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Tiempo de ejecucion: " << elapsed.count() << " ms.\n";
     return 0;
 }
