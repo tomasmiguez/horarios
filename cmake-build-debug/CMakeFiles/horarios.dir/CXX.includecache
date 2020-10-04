@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/Users/Tomas/Documents/Facu/_noFacuxd/horarios/main.cpp
+iostream
+-
+vector
+-
+fstream
+-
+string
+-
+sstream
+-
+random
+-
+cmath
+-
+iomanip
+-
+algorithm
+-
+chrono
+-
+

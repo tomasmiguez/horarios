@@ -1,0 +1,3 @@
+D:/Users/Tomas/Documents/Facu/_noFacuxd/horarios/cmake-build-debug/CMakeFiles/horarios.dir
+D:/Users/Tomas/Documents/Facu/_noFacuxd/horarios/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Users/Tomas/Documents/Facu/_noFacuxd/horarios/cmake-build-debug/CMakeFiles/rebuild_cache.dir

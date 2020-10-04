@@ -3,13 +3,15 @@
 #include <fstream>  //ifstream, ofstream
 #include <string>   //stoi
 #include <sstream>  //sstream
-#include <time.h>   //time
-#include <cstdlib>  //rand, srand
-#include <math.h>   //pow
+#include <random>  //rand, srand
+#include <cmath>   //pow
 #include <iomanip>  //setw
 #include <algorithm>//find
+#include <chrono>
 
 using namespace std;
+
+static mt19937 GEN(chrono::steady_clock::now().time_since_epoch().count());
 
 struct Modulo {
     unsigned int _duracion;
@@ -20,6 +22,7 @@ struct Modulo {
 };
 
 class Horario {
+
     unsigned int _cantGrupos;
     unsigned int _cantModulos;
 
@@ -29,7 +32,7 @@ class Horario {
     unsigned int _posPorDia;
 
 public:
-    Horario(string filename);
+    explicit Horario(const string& filename);
 
     void shufflePos();
     void mover(unsigned int modulo, int dPos);
@@ -43,7 +46,8 @@ public:
     void printHorario();
 };
 
-Horario::Horario(string filename) {
+Horario::Horario(const string& filename) {
+
     _modulos = vector<Modulo>();
 
     ifstream data(filename);
@@ -74,7 +78,8 @@ Horario::Horario(string filename) {
         while (ss >> id)
             auxM._idGrupos.push_back(id);
 
-        auxM._pos = (rand() % getCantPos());
+        uniform_int_distribution<> dis(0, getCantPos()-1);
+        auxM._pos = dis(GEN);
 
        _modulos.push_back(auxM);
     }
@@ -90,13 +95,13 @@ unsigned int Horario::getCosto() { // Medio cara, pensar mejorge
     unsigned long long costo = 0;
 
     vector< vector< unsigned int > > coliciones(getCantPos(), vector<unsigned int>(_cantGrupos, 0));
-    for(auto modActual : _modulos) {
+    for(const auto& modActual : _modulos) {
         for(auto grupoActual : modActual._idGrupos) {
             ((coliciones[modActual._pos])[grupoActual])++;
         }
     }
 
-    for(auto posActual : coliciones) {
+    for(const auto& posActual : coliciones) {
         for(auto cantColiGrupoActual : posActual) {
             if(cantColiGrupoActual > 1)
                 costo += 10; //pow(1.1, cantColiGrupoActual) * 1000;
@@ -142,19 +147,22 @@ void Horario::printHorario() {
 
 double P(Horario h, Horario hNew, double T) {
     if(hNew.getCosto() < h.getCosto()) return 1;
-    else return exp(-(hNew.getCosto() - h.getCosto())/T);
+    else return exp(-((double)(hNew.getCosto() - h.getCosto()))/T);
 }
 
 Horario simAnnealing(Horario h, double T0, unsigned long long k) {
-    double T = T0;
 
+    double T = T0;
     for(unsigned long long i = 0; i < k; i++) {
-        T = T0 * (i/k);//T0/log(i+1);
+        T = T0 * (1-((double)i/(double)k));//T0/log(i+1);
 
         Horario hNew(h);
-        hNew.mover(rand() % hNew.getCantModulos(), rand() % hNew.getCantPos());
+        uniform_int_distribution<> disInt(0, hNew.getCantModulos()-1);
+        uniform_real_distribution<> disFlt(0, 1);
+        if(disFlt(GEN) < 0.5) hNew.mover(disInt(GEN), 1);
+        else hNew.mover(disInt(GEN), -1);
 
-        if(P(h, hNew, T) >= ((double)(rand() % 10000)/10000)) {
+        if(P(h, hNew, T) >= disFlt(GEN)) {
             h = hNew;
         }
     }
@@ -164,8 +172,7 @@ Horario simAnnealing(Horario h, double T0, unsigned long long k) {
 
 int main()
 {
-    cin.ignore();
-    srand(time(NULL));
+    GEN.discard(1000);
 
     Horario test("test2.in");
 
