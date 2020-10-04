@@ -1,1 +1,1 @@
-Deshardcodear dias y modulos por dia.
+Pensar como limitar el rango horario de los modulos.

@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1601772977 source:d:\users\tomas\documents\facu\_nofacuxd\horarios\main.cpp
+	<iostream>
+	<vector>
+	<fstream>
+	<string>
+	<sstream>
+	<time.h>
+	<cstdlib>
+	<math.h>
+	<iomanip>
+	<algorithm>
+
